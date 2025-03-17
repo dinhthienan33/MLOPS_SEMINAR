@@ -1,0 +1,6 @@
+langgraph
+langgraph-sdk
+langchain-groq
+trustcall>=0.1.2
+langchain-core
+python-dotenv
