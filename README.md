@@ -45,7 +45,16 @@ By using multiple schemas, we can handle diverse use cases and ensure that the a
 3\. Human in the Loop
 ---------------------
 
+<<<<<<< HEAD
 ### Integrating Human Input
+=======
+  ```env
+  LANGSMITH_API_KEY=lsv2...
+  TAVILY_API_KEY=tvly-...
+  ANTHROPIC_API_KEY=sk-...
+  GROQ_API_KEY=sk-...
+```
+>>>>>>> de2f745babab97802537ddb6e73fc092474b443f
 
 Human input is crucial for enhancing the decision-making process of the agent. By integrating human input, we can:
 
