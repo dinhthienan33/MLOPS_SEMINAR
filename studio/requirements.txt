@@ -1,6 +1,7 @@
 langgraph
 langgraph-sdk
 langchain-groq
-trustcall>=0.1.2
+trustcall
 langchain-core
 python-dotenv
+langgraph-cli[inmem]

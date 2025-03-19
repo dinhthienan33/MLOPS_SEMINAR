@@ -1,0 +1,19 @@
+version: '3.11'
+
+services:
+  langgraph-app:
+    # Option 1: Build locally and then push to DockerHub
+    build:
+      context: .
+      dockerfile: Dockerfile
+    # Option 2: Pull directly from DockerHub (uncomment below when you've pushed the image)
+    # image: yourusername/langgraph-todo-agent:latest
+    ports:
+      - "2024:2024"
+    volumes:
+      - ./.langgraph_studio:/app/.langgraph_studio
+    env_file:
+      - .env
+    environment:
+      - GROQ_API_KEY=${GROQ_API_KEY}
+    restart: unless-stopped 

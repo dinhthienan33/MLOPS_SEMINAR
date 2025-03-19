@@ -231,7 +231,7 @@ def task_mAIstro(state: MessagesState, config: RunnableConfig, store: BaseStore)
     configurable = configuration.Configuration.from_runnable_config(config)
     user_id = configurable.user_id
 
-    # Retrieve profile memory from the store
+   # Retrieve profile memory from the store
     namespace = ("profile", user_id)
     memories = store.search(namespace)
     if memories:
@@ -348,7 +348,7 @@ def update_instructions(state: MessagesState, config: RunnableConfig, store: Bas
     # Get the user ID from the config
     configurable = configuration.Configuration.from_runnable_config(config)
     user_id = configurable.user_id
-
+    
     # Define the namespace for the memories
     namespace = ("instructions", user_id)
 
