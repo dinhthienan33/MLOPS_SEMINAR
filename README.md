@@ -106,7 +106,6 @@ To run the demo, follow these steps:
 
 Try the following interactions to test the agent's capabilities:
 
-<<<<<<< HEAD
 * Này, em thêm "Nộp báo cáo dự án trước thứ Sáu" vào danh sách công việc giúp anh nhé.
 
 * Nhắc anh vào sáng thứ Năm nha.
@@ -124,13 +123,6 @@ Try the following interactions to test the agent's capabilities:
 * Anh thích nhận nhắc nhở qua email hơn là thông báo.
 
 * Hiện tại, cho anh xem danh sách chỉ bao gồm các công việc thuộc mục "Công việc" thôi.
-=======
-* My name is Alex and I live in New York
-* I need to finish my presentation by Friday
-* Please add 'Buy groceries' to my todo list
-* What tasks do I have pending?
-* When adding tasks, please always include a deadline
->>>>>>> a88b9c3f4611a8f7145668a4b89673d4b5cf47fb
 
 ### Demo Graph
 ![Demo Graph](assets/demo_graph.png)
@@ -152,5 +144,3 @@ The LangGraph framework provides a robust foundation for building AI-driven appl
 <<<<<<< HEAD
 * LangGraph CLI Installation Guide: [https://langgraph.ai/docs/cli](https://langgraph.ai/docs/cli)
 =======
-* LangGraph CLI Installation Guide: [https://langgraph.ai/docs/cli](https://langgraph.ai/docs/cli)
->>>>>>> a88b9c3f4611a8f7145668a4b89673d4b5cf47fb
