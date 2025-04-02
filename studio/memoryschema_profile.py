@@ -19,11 +19,13 @@ load_dotenv()
 groq_api_key = os.getenv("GROQ_API_KEY")
 if not groq_api_key:
     raise ValueError("GROQ_API_KEY not found in environment variables. Please add it to your .env file.")
-
+MODEL_NAME = os.getenv("MODEL_NAME")
+if not MODEL_NAME:
+    raise ValueError("MODEL_NAME not found in environment variables. Please add it to your .env file.")
 # Initialize the LLM
 model = ChatGroq(
     api_key=groq_api_key,
-    model_name="mixtral-8x7b-32768",
+    model_name=MODEL_NAME,
     temperature=0,
     max_tokens=32768
 ) 

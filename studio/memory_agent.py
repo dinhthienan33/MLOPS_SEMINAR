@@ -133,14 +133,15 @@ class ToDo(BaseModel):
 class UpdateMemory(TypedDict):
     """ Decision on what memory type to update """
     update_type: Literal['user', 'todo', 'instructions']
-
+MODEL_NAME = os.getenv("MODEL_NAME")
+if not MODEL_NAME:
+    raise ValueError("MODEL_NAME not found in environment variables. Please add it to your .env file.")
 # Initialize the model
 model = ChatGroq(
     api_key=groq_api_key,
-    model_name="mixtral-8x7b-32768",
+    model_name=MODEL_NAME,
     temperature=0,
-    max_tokens=32768,
-    top_p=1,
+    max_tokens=8000,
     verbose=True
 )
 
