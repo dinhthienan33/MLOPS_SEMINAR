@@ -1,3 +1,15 @@
+<!-- Banner -->
+<p align="center">
+  <a href="https://www.uit.edu.vn/" title="Trường Đại học Công nghệ Thông tin" style="border: none;">
+    <img src="https://i.imgur.com/WmMnSRt.png" alt="Trường Đại học Công nghệ Thông tin | University of Information Technology">
+  </a>
+</p>
+
+<!-- Title -->
+<h1 align="center"><b>Machine Learning Operations</b></h1>
+
+<!-- Main -->
+
 # LangGraph Seminar: ToDo List Agent with Memory
 
 ## Introduction
@@ -24,13 +36,16 @@ To implement an agent with memory, we need to:
 
 State schemas are used to manage the flow of data within the agent. For our ToDo List Agent, we will define the following schemas:
 
-* **User Profile Schema**: Stores personal information about the user.
-* **ToDo Collection Schema**: Maintains a list of tasks with details like deadlines and status.
+* **User Profile Schema**: Stores personal information about the user (name, location, family members).
+* **ToDo Collection Schema**: Maintains a list of tasks with details like deadlines, estimated time, and specific solutions.
 * **Instructions Schema**: Stores user preferences for how to manage the ToDo list.
 
 ### Using Multiple Schemas
 
-By using multiple schemas, we can handle diverse use cases and ensure that the agent can manage different types of information effectively. For example, the agent can update the user profile when the user provides personal information, add tasks to the ToDo collection, and store specific instructions for task management.
+By using multiple schemas, we can handle diverse use cases and ensure that the agent can manage different types of information effectively. The agent can:
+- Update the user profile when personal information is shared
+- Add tasks to the ToDo collection with detailed information
+- Store specific instructions for task management preferences
 
 ## 3. Human in the Loop
 
@@ -44,21 +59,24 @@ Human input is crucial for enhancing the decision-making process of the agent. B
 
 ### Enhancing Decision-Making
 
-Combining human expertise with AI automation ensures that the agent can make more informed decisions. For example, the agent can suggest deadlines for tasks based on user preferences and allow the user to adjust them if necessary.
+Combining human expertise with AI automation ensures that the agent can make more informed decisions. For example, the agent can suggest local businesses for tasks and allow the user to select the most appropriate option.
 
 ## 4. Long - Short Term Memory
 
 ### Building Agents with Memory
 
-To build an agent that can maintain both short-term context and long-term memory, we need to:
+Our agent, `task_mAIstro`, will help manage a ToDo list with different types of memory:
 
-1. **Implement Semantic Memory**: Use schemas and collections to store and retrieve information.
-2. **Create a ToDo List Agent**: Develop an agent that can manage tasks and remember user preferences.
-3. **Manage Different Types of Memory**: Handle user profiles, tasks, and instructions separately to ensure efficient memory management.
+1. **Semantic Memory**: Stores structured information about user profile and tasks.
+2. **Procedural Memory**: Manages user preferences and instructions for creating ToDo items.
+3. **Decision-Making Memory**: Decides when to save memories based on conversation context.
 
-### Implementation of Semantic Memory
+### Implementation of Memory Types
 
-Semantic memory allows the agent to understand and store information in a structured way. For example, the agent can remember that a user prefers to have deadlines for all tasks and apply this preference when adding new tasks.
+The agent can make decisions to update three types of long-term memory:
+- User `profile` with general user information (name, location, family)
+- ToDo list `collection` with detailed task information
+- `Instructions` on how to update items to the ToDo list (like including local businesses)
 
 ## 5. Demo: A ToDo List Agent with Memory
 
@@ -70,13 +88,16 @@ The ToDo List Agent demo showcases the following capabilities:
 * **Intelligent Memory Updates**: The agent decides when to save memories based on the conversation context.
 * **Multiple Memory Types**:
   * **User Profile**: Remembers personal information about the user.
-  * **ToDo Collection**: Maintains a list of tasks with details like deadlines and status.
+  * **ToDo Collection**: Maintains a list of tasks with details like deadlines, time estimates, and specific solutions.
   * **Instructions**: Stores user preferences for how to manage the ToDo list.
 
 ### Running the Demo
 
 To run the demo, follow these steps:
-
+0. Navigtate to the `demo` folder
+```bash
+cd demo
+```
 1. Install LangGraph CLI:
    ```bash
    pip install --upgrade "langgraph-cli[inmem]"
@@ -87,12 +108,10 @@ To run the demo, follow these steps:
    pip install -r requirements.txt
    ```
 
-3. Set up environment variables:
-   ```bash
-   export LANGSMITH_API_KEY=lsv2...
-   export TAVILY_API_KEY=tvly-...
-   export ANTHROPIC_API_KEY=sk-...
-   export OPENAI_API_KEY=sk-...
+3. Set up environment variables in a `.env` file:
+   ```
+   GROQ_API_KEY=your_groq_api_key
+   MODEL_NAME=your_model_name
    ```
 
 4. Start LangGraph development server:
@@ -106,26 +125,39 @@ To run the demo, follow these steps:
 
 Try the following interactions to test the agent's capabilities:
 
-* Này, em thêm "Nộp báo cáo dự án trước thứ Sáu" vào danh sách công việc giúp anh nhé.
+* "My name is Lance. I live in SF with my wife. I have a 1 year old daughter."
+  * *The agent will update the user profile with personal information.*
 
-* Nhắc anh vào sáng thứ Năm nha.
+* "My wife asked me to book swim lessons for the baby."
+  * *The agent will add a task to the ToDo list.*
 
-* Cho anh xem danh sách công việc của anh đi.
+* "When creating or updating ToDo items, include specific local businesses / vendors."
+  * *The agent will update its instructions for creating ToDo items.*
 
-* Anh muốn phân loại công việc thành "Công việc" và "Cá nhân".
+* "I need to fix the jammed electric Yale lock on the door."
+  * *The agent will add another task to the ToDo list.*
 
-* À, anh đã hoàn thành báo cáo dự án rồi. Đánh dấu là đã hoàn thành nhé.
+* "For the swim lessons, I need to get that done by end of November."
+  * *The agent will update the swim lessons task with a deadline.*
 
-* Em nhớ giúp anh là anh thường nộp báo cáo vào thứ Sáu nha.
+* "I have 30 minutes, what tasks can I get done?"
+  * *The agent will suggest tasks based on time estimates.*
 
-* Thêm "Mua đồ ăn" vào danh sách công việc của anh dưới mục "Cá nhân" và nhắc anh vào sáng thứ Bảy.
-
-* Anh thích nhận nhắc nhở qua email hơn là thông báo.
-
-* Hiện tại, cho anh xem danh sách chỉ bao gồm các công việc thuộc mục "Công việc" thôi.
+* "Yes, give me some options to call for swim lessons."
+  * *The agent will provide specific solutions for the swim lessons task.*
 
 ### Demo Graph
 ![Demo Graph](assets/demo_graph.png)
+
+## Async Implementation
+
+To ensure optimal performance when running in an ASGI web server, the agent code has been updated to use async/await patterns. This prevents blocking calls from degrading performance by:
+
+1. Converting node functions to `async def`
+2. Using `await asyncio.to_thread()` for potentially blocking operations:
+   - Store operations (search, get, put)
+   - Model inference calls
+   - Trustcall extractor invocations
 
 ## Conclusion
 
@@ -141,6 +173,4 @@ The LangGraph framework provides a robust foundation for building AI-driven appl
 
 * LangGraph Documentation: [https://langgraph.ai/docs](https://langgraph.ai/docs)
 * LangGraph GitHub Repository: [https://github.com/langgraph/langgraph](https://github.com/langgraph/langgraph)
-<<<<<<< HEAD
 * LangGraph CLI Installation Guide: [https://langgraph.ai/docs/cli](https://langgraph.ai/docs/cli)
-=======

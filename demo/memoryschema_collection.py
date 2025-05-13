@@ -1,5 +1,6 @@
 import uuid 
 import os
+import asyncio
 from dotenv import load_dotenv
 
 from pydantic import BaseModel, Field
@@ -60,7 +61,8 @@ TRUSTCALL_INSTRUCTION = """Reflect on following interaction.
 Use the provided tools to retain any necessary memories about the user. 
 
 Use parallel tool calling to handle updates and insertions simultaneously:"""
-def call_model(state: MessagesState, config: RunnableConfig, store: BaseStore):
+
+async def call_model(state: MessagesState, config: RunnableConfig, store: BaseStore):
 
     """Load memory from the store and use it to personalize the chatbot's response."""
     
@@ -72,18 +74,21 @@ def call_model(state: MessagesState, config: RunnableConfig, store: BaseStore):
 
     # Retrieve memory from the store
     namespace = ("memories", user_id)
-    memories = store.search(namespace)
+    memories = await asyncio.to_thread(store.search, namespace)
 
     # Format the memories for the system prompt
     info = "\n".join(f"- {mem.value['content']}" for mem in memories)
     system_msg = MODEL_SYSTEM_MESSAGE.format(memory=info)
 
     # Respond using memory as well as the chat history
-    response = model.invoke([SystemMessage(content=system_msg)]+state["messages"])
+    response = await asyncio.to_thread(
+        model.invoke,
+        [SystemMessage(content=system_msg)]+state["messages"]
+    )
 
     return {"messages": response}
 
-def write_memory(state: MessagesState, config: RunnableConfig, store: BaseStore):
+async def write_memory(state: MessagesState, config: RunnableConfig, store: BaseStore):
 
     """Reflect on the chat history and save a memory to the store."""
     
@@ -97,7 +102,7 @@ def write_memory(state: MessagesState, config: RunnableConfig, store: BaseStore)
     namespace = ("memories", user_id)
 
     # Retrieve the most recent memories for context
-    existing_items = store.search(namespace)
+    existing_items = await asyncio.to_thread(store.search, namespace)
 
     # Format the existing memories for the Trustcall extractor
     tool_name = "Memory"
@@ -111,15 +116,19 @@ def write_memory(state: MessagesState, config: RunnableConfig, store: BaseStore)
     updated_messages=list(merge_message_runs(messages=[SystemMessage(content=TRUSTCALL_INSTRUCTION)] + state["messages"]))
 
     # Invoke the extractor
-    result = trustcall_extractor.invoke({"messages": updated_messages, 
-                                        "existing": existing_memories})
+    result = await asyncio.to_thread(
+        trustcall_extractor.invoke,
+        {"messages": updated_messages, "existing": existing_memories}
+    )
 
     # Save the memories from Trustcall to the store
     for r, rmeta in zip(result["responses"], result["response_metadata"]):
-        store.put(namespace,
-                  rmeta.get("json_doc_id", str(uuid.uuid4())),
-                  r.model_dump(mode="json"),
-            )
+        await asyncio.to_thread(
+            store.put,
+            namespace,
+            rmeta.get("json_doc_id", str(uuid.uuid4())),
+            r.model_dump(mode="json")
+        )
 
 # Define the graph
 builder = StateGraph(MessagesState,config_schema=configuration.Configuration)
