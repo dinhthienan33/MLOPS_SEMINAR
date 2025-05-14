@@ -131,9 +131,32 @@ class ToDo(BaseModel):
 ## Initialize the model and tools
 
 # Update memory tool
-class UpdateMemory(TypedDict):
-    """ Decision on what memory type to update """
-    update_type: Literal['user', 'todo', 'instructions']
+class UpdateMemory(BaseModel):
+    """Tool to decide what type of memory to update based on the conversation"""
+    update_type: Literal['user', 'todo', 'instructions'] = Field(
+        description="The type of memory to update: user profile, todo list, or instructions"
+    )
+
+# Define proper tool schema for Groq API
+UPDATE_MEMORY_TOOL = {
+    "type": "function",
+    "function": {
+        "name": "UpdateMemory",
+        "description": "Decides what type of memory needs to be updated based on the conversation",
+        "parameters": {
+            "type": "object",
+            "properties": {
+                "update_type": {
+                    "type": "string",
+                    "enum": ["user", "todo", "instructions"],
+                    "description": "The type of memory to update: user profile, todo list, or instructions"
+                }
+            },
+            "required": ["update_type"]
+        }
+    }
+}
+
 MODEL_NAME = os.getenv("MODEL_NAME")
 if not MODEL_NAME:
     raise ValueError("MODEL_NAME not found in environment variables. Please add it to your .env file.")
@@ -258,7 +281,7 @@ async def task_mAIstro(state: MessagesState, config: RunnableConfig, store: Base
 
     # Respond using memory as well as the chat history
     response = await asyncio.to_thread(
-        model.bind_tools([UpdateMemory], parallel_tool_calls=False).invoke,
+        model.bind_tools([UPDATE_MEMORY_TOOL], parallel_tool_calls=False).invoke,
         [SystemMessage(content=system_msg)]+state["messages"]
     )
 

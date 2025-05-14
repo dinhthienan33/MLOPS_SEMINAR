@@ -143,6 +143,30 @@ LangGraph Studio requires a properly configured `langgraph.json` file in your pr
 - Environment variables
 - Docker configuration
 
+Here's a sample `langgraph.json` file:
+
+```json
+{
+  "graphs": {
+    "demo2.task_maistro": {
+      "demo_data": "demo_inputs.json",
+      "env_vars": ["GROQ_API_KEY", "MODEL_NAME"]
+    }
+  },
+  "host": "localhost",
+  "port": 3000,
+  "dockerfile_lines": [
+    "RUN apt-get update && apt-get install -y gcc"
+  ]
+}
+```
+
+Common JSON syntax errors to check:
+- Missing commas between properties
+- Trailing commas (not allowed in JSON)
+- Unquoted property names
+- Using single quotes instead of double quotes
+
 To customize your Docker environment, you can add instructions in the `dockerfile_lines` section:
 
 ```json
